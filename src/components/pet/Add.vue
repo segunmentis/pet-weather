@@ -2,39 +2,23 @@
   <div class="mt-20 container">
     <div class="ml-auto mr-auto w-50">
       <b-card header="Add a Pet" header-tag="header" header-class="text-left">
-        <div
-          v-if="show"
-          class="alert alert-success alert-dismissible fade show"
-          role="alert"
-        >
-          {{ msg }}
-          <button
-            type="button"
-            class="close"
-            data-dismiss="alert"
-            aria-label="Close"
-          >
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-
-        <div
-          v-if="showErr"
-          class="alert alert-danger alert-dismissible fade show"
-          role="alert"
+        <b-alert
+          variant="danger"
+          :show="showAlert"
+          dismissible
+          @dismissed="resetAlert"
         >
           <ul>
             <li v-for="(err, index) in errors" :key="index">{{ err.msg }}</li>
           </ul>
-          <button
-            type="button"
-            class="close"
-            data-dismiss="alert"
-            aria-label="Close"
-          >
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
+        </b-alert>
+        <b-alert
+          variant="success"
+          :show="show"
+          dismissible
+          @dismissed="resetAlert"
+          >{{ msg }}</b-alert
+        >
 
         <b-form @submit.prevent="onSubmit" class="text-left">
           <b-form-group
@@ -54,7 +38,12 @@
             label="Pet Type:"
             label-for="input-3"
           >
-            <select class="form-control" name="type" v-model="form.type">
+            <select
+              class="form-control"
+              name="type"
+              v-model="form.type"
+              @change="getBreed($event)"
+            >
               <option value="">Select a Pet Type</option>
               <option
                 v-for="(pet, index) in pets"
@@ -69,23 +58,15 @@
             label="Pet Breed:"
             label-for="input-3"
           >
-            <b-form-select
-              id="input-3"
-              v-model="form.breed"
-              :options="breeds"
-            ></b-form-select>
-          </b-form-group>
-
-          <b-form-group
-            id="input-group-2"
-            label="Your Location:"
-            label-for="input-2"
-          >
-            <b-form-input
-              id="input-2"
-              v-model="form.location"
-              placeholder="E.g Boston, MA"
-            ></b-form-input>
+            <select class="form-control" name="breed" v-model="form.breed">
+              <option value="">Select a Breed</option>
+              <option
+                v-for="(br, index) in breeds"
+                :key="index"
+                :value="br.name"
+                >{{ br.name }}</option
+              >
+            </select>
           </b-form-group>
 
           <b-button type="submit" variant="primary">Submit</b-button>
@@ -104,27 +85,16 @@ export default {
       form: {
         name: "",
         type: "",
-        breed: null,
-        location: "",
+        breed: "",
         latitude: "",
         longitude: "",
       },
       pets: {},
-      breeds: [
-        { text: "Select One", value: null },
-        "German Shepherds",
-        "Golden Retrievers",
-        "Poodles",
-        "Rottweilers",
-        "Labrador Retrievers",
-        "British Shorthair",
-        "Persian",
-        "Maine Coon",
-      ],
+      breeds: {},
       msg: "",
       errors: {},
       show: false,
-      showErr: false,
+      showAlert: false,
     };
   },
 
@@ -143,7 +113,7 @@ export default {
           console.log(error.response);
           if (error.response.status === 422) {
             this.errors = error.response.data.error;
-            this.showErr = true;
+            this.showAlert = true;
           }
         });
     },
@@ -157,6 +127,24 @@ export default {
         .catch((error) => {
           console.log(error.response);
         });
+    },
+
+    getBreed(event) {
+      let id = event.target.value;
+      if (id != 0) {
+        this.form.breed = "";
+        axios
+          .get(process.env.VUE_APP_API_URL + "/breeds/" + id)
+          .then((response) => {
+            this.breeds = response.data.data;
+          })
+          .catch((error) => {
+            console.log(error.response);
+          });
+      } else {
+        this.breeds = "";
+        this.form.breed = "";
+      }
     },
 
     getLocation() {
@@ -177,11 +165,15 @@ export default {
       this.form.name = "";
       this.form.type = null;
       this.form.breed = null;
-      this.form.location = "";
       this.form.latitude = "";
       this.form.longitude = "";
-      this.msg = "";
+    },
+
+    resetAlert() {
+      this.showAlert = false;
       this.show = false;
+      this.msg = "";
+      this.errors = {};
     },
   },
   created() {
