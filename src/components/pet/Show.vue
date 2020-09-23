@@ -54,7 +54,7 @@ export default {
     getLocationKey() {
       axios
         .get(
-          "http://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=" +
+          process.env.VUE_APP_ACCUWEATHER_LOCATION_URL +
             process.env.VUE_APP_ACCUWEATHER_KEY +
             "=" +
             this.pet.latitude +
@@ -74,7 +74,7 @@ export default {
     getWeather() {
       axios
         .get(
-          "http://dataservice.accuweather.com/forecasts/v1/hourly/1hour/" +
+          process.env.VUE_APP_ACCUWEATHER_FORCAST_URL +
             this.loc_key +
             "?apikey=" +
             process.env.VUE_APP_ACCUWEATHER_KEY
