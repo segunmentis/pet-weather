@@ -1,5 +1,7 @@
 # pet-weather
 
+This is the front-end app for the pet-shelter project. It accesses the RESTful JSON API endpoints created on the pet-shelter project and renders the data. It is built with Vue.js javascript framework.
+
 ## Project setup
 ```
 npm install
@@ -19,6 +21,3 @@ npm run build
 ```
 npm run lint
 ```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
