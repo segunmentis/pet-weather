@@ -30,7 +30,7 @@ import axios from "axios";
 export default {
   data() {
     return {
-C      index: 0,
+      index: 0,
       limit: 10,
       fields: [
         "index",
