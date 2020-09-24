@@ -11,8 +11,8 @@ Vue.use(IconsPlugin);
 
 Vue.use(VueGoogleMaps, {
   load: {
-    key: "AIzaSyA29W_mShNk-CeyfzgBGwo4jEqJ9zK-u4o",
-    libraries: "places", // necessary for places input
+    key: process.env.VUE_APP_GOOGLE_KEY,
+    libraries: "places", 
   },
 });
 
