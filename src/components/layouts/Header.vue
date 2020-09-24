@@ -10,6 +10,9 @@
         <router-link :to="{ name: 'Add' }" class="nav-link"
           >Add A Pet</router-link
         >
+        <router-link :to="{ name: 'Index' }" class="nav-link"
+          >Pets Map</router-link
+        >
       </b-navbar-nav>
     </b-collapse>
   </b-navbar>
