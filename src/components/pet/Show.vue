@@ -56,7 +56,7 @@ export default {
         .get(
           process.env.VUE_APP_ACCUWEATHER_LOCATION_URL +
             process.env.VUE_APP_ACCUWEATHER_KEY +
-            "=" +
+            "&q=" +
             this.pet.latitude +
             "," +
             this.pet.longitude
